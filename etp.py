@@ -1,4 +1,5 @@
 import sys,subprocess,select,fcntl
+from CommandIo import CommandIo
 
 def lock():
     this_script_file = open(sys.argv[0], "r")
@@ -7,40 +8,9 @@ def lock():
 
 lock()
 
-class Nc:
-  def __init__(self, host, port):
-    self.host = host
-    self.port = port
-    self.popen = subprocess.Popen(["nc", self.host, str(self.port)], 
-    					stdin=subprocess.PIPE, 
-					stdout=subprocess.PIPE,
-					stderr=subprocess.PIPE)
-    self.stdinPoll = select.poll()
-    self.stdinPoll.register(self.popen.stdin, select.POLLOUT)
-    self.stdoutPoll = select.poll()
-    self.stdoutPoll.register(self.popen.stdout, select.POLLIN)
-    self.stderrPoll = select.poll()
-    self.stderrPoll.register(self.popen.stderr, select.POLLIN)
-    
-  def communicate(self, inBytes = None, timeout = 0):
-    if inBytes is not None:
-      if len(self.stdinPoll.poll(timeout)) > 0:
-        self.popen.stdin.write(inBytes)
-        self.popen.stdin.flush()
-      
-    readFromStdout = []
-    while len(self.stdoutPoll.poll(timeout)) > 0:
-      readFromStdout.append(self.popen.stdout.readline())
-
-    readFromStderr = []
-    while len(self.stderrPoll.poll(timeout)) > 0:
-      readFromStderr.append(self.popen.stderr.readline())
-    
-    return (readFromStdout, readFromStderr)
-
-class Etp(Nc):
+class Etp(CommandIo):
   def __init__(self, host = "localhost", port = 21):
-    Nc.__init__(self, host, port)
+    CommandIo.__init__(self, ["nc", host, str(port)])
 
   def welcome(self):
     out, err = self.communicate(None, 100)
@@ -78,6 +48,7 @@ class Etp(Nc):
     out, err = self.communicate(b, 5000)
     print(out)
 
+etp = Etp()
 etp.welcome()
 etp.login()
 etp.count(1000)
