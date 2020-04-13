@@ -1,5 +1,6 @@
 import sys,subprocess,select,fcntl
-from CommandIo import CommandIo
+from CommandIo.CommandIo import CommandIo
+print(CommandIo)
 
 def lock():
     this_script_file = open(sys.argv[0], "r")

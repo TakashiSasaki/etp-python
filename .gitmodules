@@ -1,0 +1,3 @@
+[submodule "CommandIo"]
+	path = CommandIo
+	url = git@github.com:TakashiSasaki/CommandIo.git
