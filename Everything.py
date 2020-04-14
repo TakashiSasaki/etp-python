@@ -25,7 +25,7 @@ class Everything(CommandIo):
     if out[0] != b'230 Logged on.\r\n':
       raise RuntimeError("failed to log-in.")
 
-  def case(self, b = False):
+  def case(self, b:bool):
     s = "EVERYTHING CASE {}\n".format("1" if b else "0") 
     b = s.encode("utf8")
     self.write(b)
@@ -39,43 +39,43 @@ class Everything(CommandIo):
     out = self.readlines(1, 10)
     print(out)
 
-  def pathColumn(self):
-    s = "EVERYTHING PATH_COLUMN 1\n"
+  def pathColumn(self, b:bool):
+    s = "EVERYTHING PATH_COLUMN {}\n".format("1" if b else "0")
     b = s.encode("utf8")
     self.write(b)
     out = self.readlines(1, 10)
     print(out)
 
-  def dateCreatedColumn(self):
-    s = "EVERYTHING DATE_CREATED_COLUMN 1\n"
+  def dateCreatedColumn(self, b:bool):
+    s = "EVERYTHING DATE_CREATED_COLUMN {}\n".format("1" if b else "0")
     b = s.encode("utf8")
     self.write(b)
     out = self.readlines(1, 10)
     print(out)
   
-  def dateModifiedColumn(self):
-    s = "EVERYTHING DATE_MODIFIED_COLUMN 1\n"
+  def dateModifiedColumn(self, b:bool):
+    s = "EVERYTHING DATE_MODIFIED_COLUMN {}\n".format("1" if b else "0")
     b = s.encode("utf8")
     self.write(b)
     out = self.readlines(1, 10)
     print(out)
 
-  def attributesColumn(self):
-    s = "EVERYTHING ATTRIBUTES_COLUMN 1\n"
+  def attributesColumn(self, b:bool):
+    s = "EVERYTHING ATTRIBUTES_COLUMN {}\n".format("1" if b else "0")
     b = s.encode("utf8")
     self.write(b)
     out = self.readlines(1, 10)
     print(out)
 
-  def sizeColumn(self):
-    s = "EVERYTHING SIZE_COLUMN 1\n"
+  def sizeColumn(self, b:bool):
+    s = "EVERYTHING SIZE_COLUMN {}\n".format("1" if b else "0")
     b = s.encode("utf8")
     self.write(b)
     out = self.readlines(1, 10)
     print(out)
 
-  def fileListFilenameColumn(self):
-    s = "EVERYTHING FILE_LIST_FILENAME_COLUMN 1\n"
+  def fileListFilenameColumn(self, b:bool):
+    s = "EVERYTHING FILE_LIST_FILENAME_COLUMN {}\n".format("1" if b else "0")
     b = s.encode("utf8")
     self.write(b)
     out = self.readlines(1, 10)
@@ -101,21 +101,28 @@ class Everything(CommandIo):
     self.write(b)
     out = self.readlines(1, 1000)
     print(out)
-    out = self.readlines(1000, 100)
+    out = self.readlines(10000, 100)
     print(out)
+  
+  def wholeWord(self, b:bool):
+    s = "EVERYTHING WHOLE_WORD {}\n".format("1" if b else "0")
+    b = s.encode("utf8")
+    out = self.readlines(1, 10)
+    print(out)
+
 
 if __name__ == "__main__":
   everything = Everything()
   everything.welcome()
   everything.login()
   everything.count(10)
-  everything.pathColumn()
-  everything.dateCreatedColumn()
-  everything.dateModifiedColumn()
-  everything.sizeColumn()
-  everything.fileListFilenameColumn()
+  everything.pathColumn(True)
+  everything.dateCreatedColumn(True)
+  everything.dateModifiedColumn(True)
+  everything.sizeColumn(True)
+  everything.fileListFilenameColumn(True)
   everything.dateModifiedDescending()
-  everything.search("Everything")
-  #everything.case(False)
+  everything.search("id_rsa.pub")
+  everything.case(False)
   everything.query()
 
