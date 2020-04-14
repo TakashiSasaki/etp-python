@@ -1,2 +1,2 @@
 test:
-	python3 etp.py
+	python3 Everything.py
